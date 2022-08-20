@@ -1,16 +1,9 @@
 '''
-
 TODO übgültige Züge aussortieren (Regelwerk)
 TODO Spielfeld schöner gestalten (pygame)
-
 Noch nötig für 2P mode:
   Gewinnerlogik einbauen
 '''
-
-from enum import Enum
-
-class Color(Enum):
-    pass
 
 figures_list_p1 = [
     ["b", 0, 6], ["b", 1, 6], ["b", 2, 6], ["b", 3, 6], ["b", 4, 6], ["b", 5, 6], ["b", 6, 6], ["b", 7, 6],
@@ -26,6 +19,13 @@ punished_figures_list_p1 = []
 punished_figures_list_p2 = []
 
 valid_moves_list = []
+
+# Colors
+BG_BLACK = "\033[40m"
+FG_WHITE = "\033[37m"
+
+BG_WHITE = "\033[47m"
+FG_BLACK = "\033[30m"
 
 gamefield = [
     ['', '', '', '', '', '', '', ''],
@@ -62,62 +62,68 @@ def print_gamefield(current_player):
     if current_player == "P1":
         backgroundcolor = "WHITE"
 
-        print("    a  b  c  d  e  f  g  h")
-        print("   -------------------------")
+        print("        a    b    c    d    e    f    g    h  ")
+        print("    ---------------------------------------------")
         for i in range(len(gamefield)):
-            print(8-i, end=" | ")
+            print(BG_BLACK, FG_WHITE, 8-i, end=" | ")
 
             for j in range(len(gamefield[i])):
                 if backgroundcolor == "WHITE":
-                    print() # Background = WHITE
+                    print(BG_WHITE, end="") # Background = WHITE
                     backgroundcolor = "BLACK"
                 else:
-                    print() # Background = BLACK
+                    print(BG_BLACK, end="") # Background = BLACK
                     backgroundcolor = "WHITE"
                 if gamefield[i][j] == "":
-                    print(" ", end="  ")
+                    print("   ", end="  ")
                 else:
-                    print(gamefield[i][j], end="  ")
+                    print(" ", gamefield[i][j], end="  ")
                     
             if backgroundcolor == "WHITE":
                 backgroundcolor = "BLACK"
+            else:
+                backgroundcolor = "WHITE"
 
-            print("|", 8-i, end="")
+            print(BG_BLACK, FG_WHITE, "|", 8-i, end="")
             print()
 
-        print("   -------------------------")
-        print("    a  b  c  d  e  f  g  h")
+        print("    ---------------------------------------------")
+        print("        a    b    c    d    e    f    g    h  ")
+
+        print("\033[40m", end="")
 
     elif current_player == "P2":
         backgroundcolor = "WHITE"
 
-        print("    h  g  f  e  d  c  b  a")
-        print("   -------------------------")
+        print("        h    g    f    e    d    c    b    a  ")
+        print("    ---------------------------------------------")
 
         for i in range(len(gamefield)):
-            print(i + 1, end=" | ")
+            print(BG_BLACK, FG_WHITE, i + 1, end=" | ")
 
             for j in range(len(gamefield[i])):
                 if backgroundcolor == "WHITE":
-                    print() # Background = WHITE
+                    print("\033[47m", end="") # Background = WHITE
                     backgroundcolor = "BLACK"
                 else:
-                    print() # Background = BLACK
-                    backgroundcolor = "BLACK"
+                    print("\033[40m", end="") # Background = BLACK
+                    backgroundcolor = "WHITE"
 
                 if gamefield[7-i][7-j] == "":
-                    print(" ", end="  ")
+                    print("   ", end="  ")
                 else:
-                    print(gamefield[7-i][7-j], end="  ")
+                    print(" ", gamefield[7-i][7-j], end="  ")
 
             if backgroundcolor == "WHITE":
                 backgroundcolor = "BLACK"
+            else:
+                backgroundcolor = "WHITE"
 
-            print("|", i + 1, end="")
+            print(BG_BLACK, FG_WHITE, "|", i + 1, end="")
             print()
 
-        print("   -------------------------")
-        print("    h  g  f  e  d  c  b  a")
+        print("    ---------------------------------------------")
+        print("        h    g    f    e    d    c    b    a  ")
 
 # Nicht fertig
 # Kompatibel für cp machen
@@ -223,7 +229,7 @@ def get_valid_moves(current_player):
 
 run = True
 mode = "pp" # pp = Player vs Player | pc = Player vs Computer | cc = Computer vs Computer
-current_player = "P1"
+current_player = "P2"
 user_input = ""
 
 # Nicht fertig
@@ -258,7 +264,6 @@ while run:
 a  b  c  d  e  f  g  h  = Schach
 1  2  3  4  5  6  7  8  = user input
 0  1  2  3  4  5  6  7  = j Python
-
 T  S  L  D  K  L  S  T   0 8
 B  B  B  B  B  B  B  B   1 7
                          2 6
