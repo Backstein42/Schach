@@ -7,13 +7,18 @@ Noch nötig für 2P mode:
   Gewinnerlogik einbauen
 '''
 
+from enum import Enum
+
+class Color(Enum):
+    pass
+
 figures_list_p1 = [
-    ["b", 0, 6], ["b", 1, 6], ["b", 2, 6], ["b", 3, 6], ["b", 4, 6], ["b", 5, 6], ["b", 6, 6], ["b", 7, 6], 
+    ["b", 0, 6], ["b", 1, 6], ["b", 2, 6], ["b", 3, 6], ["b", 4, 6], ["b", 5, 6], ["b", 6, 6], ["b", 7, 6],
     ["t", 0, 7], ["s", 1, 7], ["l", 2, 7], ["d", 3, 7], ["k", 4, 7], ["l", 5, 7], ["s", 6, 7], ["t", 7, 7],
 ]
 
 figures_list_p2 = [
-    ["B", 0, 1], ["B", 1, 1], ["B", 2, 1], ["B", 3, 1], ["B", 4, 1], ["B", 5, 1], ["B", 6, 1], ["B", 7, 1], 
+    ["B", 0, 1], ["B", 1, 1], ["B", 2, 1], ["B", 3, 1], ["B", 4, 1], ["B", 5, 1], ["B", 6, 1], ["B", 7, 1],
     ["T", 0, 0], ["S", 1, 0], ["L", 2, 0], ["K", 3, 0], ["D", 4, 0], ["L", 5, 0], ["S", 6, 0], ["T", 7, 0],
 ]
 
@@ -55,32 +60,62 @@ def update_gamefield():
 
 def print_gamefield(current_player):
     if current_player == "P1":
+        backgroundcolor = "WHITE"
+
         print("    a  b  c  d  e  f  g  h")
         print("   -------------------------")
         for i in range(len(gamefield)):
             print(8-i, end=" | ")
+
             for j in range(len(gamefield[i])):
+                if backgroundcolor == "WHITE":
+                    print() # Background = WHITE
+                    backgroundcolor = "BLACK"
+                else:
+                    print() # Background = BLACK
+                    backgroundcolor = "WHITE"
                 if gamefield[i][j] == "":
                     print(" ", end="  ")
                 else:
                     print(gamefield[i][j], end="  ")
+                    
+            if backgroundcolor == "WHITE":
+                backgroundcolor = "BLACK"
+
             print("|", 8-i, end="")
             print()
+
         print("   -------------------------")
         print("    a  b  c  d  e  f  g  h")
 
     elif current_player == "P2":
+        backgroundcolor = "WHITE"
+
         print("    h  g  f  e  d  c  b  a")
         print("   -------------------------")
+
         for i in range(len(gamefield)):
             print(i + 1, end=" | ")
+
             for j in range(len(gamefield[i])):
+                if backgroundcolor == "WHITE":
+                    print() # Background = WHITE
+                    backgroundcolor = "BLACK"
+                else:
+                    print() # Background = BLACK
+                    backgroundcolor = "BLACK"
+
                 if gamefield[7-i][7-j] == "":
                     print(" ", end="  ")
                 else:
                     print(gamefield[7-i][7-j], end="  ")
+
+            if backgroundcolor == "WHITE":
+                backgroundcolor = "BLACK"
+
             print("|", i + 1, end="")
             print()
+
         print("   -------------------------")
         print("    h  g  f  e  d  c  b  a")
 
