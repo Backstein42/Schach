@@ -99,10 +99,10 @@ def print_gamefield(current_player):
 
             for j in range(len(gamefield[i])):
                 if backgroundcolor == "WHITE":
-                    print("") # Background = WHITE
+                    print(end="") # Background = WHITE
                     backgroundcolor = "BLACK"
                 else:
-                    print("") # Background = BLACK
+                    print(end="") # Background = BLACK
                     backgroundcolor = "BLACK"
 
                 if gamefield[7-i][7-j] == "":
