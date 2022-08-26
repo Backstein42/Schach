@@ -1,8 +1,8 @@
 '''
-TODO übgültige Züge aussortieren (Regelwerk)
-TODO Spielfeld schöner gestalten (pygame)
-Noch nötig für 2P mode:
-  Gewinnerlogik einbauen
+
+TODO Rulebook
+    TODO Knight, Queen, King
+
 '''
 
 figures_list_p1 = [
@@ -18,7 +18,8 @@ figures_list_p2 = [
 punished_figures_list_p1 = []
 punished_figures_list_p2 = []
 
-valid_moves_list = []
+valid_moves_list_p1 = []
+valid_moves_list_p2 = []
 
 # Colors
 BG_BLACK = "\033[40m"
@@ -224,6 +225,255 @@ def get_valid_moves(current_player):
                 pass
 
 # Funktions which return valid moves of the figures
+def pawn(x, y, player):
+    if player == "P1":
+        if gamefield[x][y+1] == "":
+            valid_moves_list_p1.append([x, y+1])
+    
+        if gamefield[x][y+2] == "":
+            valid_moves_list_p1.append([x, y+2])
+
+        for i in range(len(figures_list_p2)):
+            if x+1 == figures_list_p2[i][1] and y+1 == figures_list_p2[i][2]:
+                if figures_list_p2[i][0] == "K":
+                    print("SCHACH")
+                valid_moves_list_p1.append([x+1, y+1])
+            elif x-1 == figures_list_p2[i][1] and y+1 == figures_list_p2[i][2]:
+                if figures_list_p2[i][0] == "K":
+                    print("SCHACH")
+                valid_moves_list_p1.append([x-1, y+1])
+    elif player == "P2":
+        if gamefield[x][y+1] == "":
+            valid_moves_list_p2.append([x, y+1])
+    
+        if gamefield[x][y+2] == "":
+            valid_moves_list_p2.append([x, y+2])
+
+        for i in range(len(figures_list_p1)):
+            if x+1 == figures_list_p1[i][1] and y+1 == figures_list_p1[i][2]:
+                if figures_list_p1[i][0] == "k":
+                    print("SCHACH")
+
+                valid_moves_list_p2.append([x+1, y+1])
+            elif x-1 == figures_list_p1[i][1] and y+1 == figures_list_p1[i][2]:
+                if figures_list_p1[i][0] == "k":
+                    print("SCHACH")
+                    
+                valid_moves_list_p2.append([x-1, y+1])
+
+def bishop(x, y, player):
+    if player == "P1":
+        for i in range(len(gamefield)-x):
+            if gamefield[x+i][y+i] == "":
+                valid_moves_list_p1.append([x+i, y+i])
+                break
+            
+            for j in range(len(figures_list_p1)):
+                if x+i == figures_list_p1[i][1] and y+i == figures_list_p1[i][2]:
+                    break
+
+            for j in range(len(figures_list_p2)):
+                if x+i == figures_list_p2[i][1] and y+i == figures_list_p2[i][2]:
+                    if figures_list_p2[i][0] == "K":
+                        print("SCHACH")
+
+                    valid_moves_list_p1.append([x+i, y+i])
+                    break
+
+        # Same in the other direction
+        for i in range(x):
+            if gamefield[x-i][y-i] == "":
+                valid_moves_list_p1.append([x-i, y-i])
+                break
+            
+            for j in range(len(figures_list_p1)):
+                if x-i == figures_list_p1[i][1] and y-i == figures_list_p1[i][2]:
+                    break
+
+            for j in range(len(figures_list_p2)):
+                if x-i == figures_list_p2[i][1] and y-i == figures_list_p2[i][2]:
+                    if figures_list_p2[i][0] == "K":
+                        print("SCHACH")
+
+                    valid_moves_list_p1.append([x-i, y-i])
+                    break
+
+    elif player == "P2":
+        for i in range(len(gamefield)-x):
+            if gamefield[x+i][y+i] == "":
+                valid_moves_list_p2.append([x+i, y+i])
+                break
+            
+            for j in range(len(figures_list_p2)):
+                if x+i == figures_list_p2[i][1] and y+i == figures_list_p2[i][2]:
+                    break
+
+            for j in range(len(figures_list_p1)):
+                if x+i == figures_list_p1[i][1] and y+i == figures_list_p1[i][2]:
+                    if figures_list_p1[i][0] == "k":
+                        print("SCHACH")
+
+                    valid_moves_list_p2.append([x+i, y+i])
+                    break 
+
+        # Same in the other direction
+        for i in range(len(gamefield)-x):
+            if gamefield[x-i][y-i] == "":
+                valid_moves_list_p2.append([x-i, y-i])
+                break
+            
+            for j in range(len(figures_list_p2)):
+                if x-i == figures_list_p2[i][1] and y-i == figures_list_p2[i][2]:
+                    break
+
+            for j in range(len(figures_list_p1)):
+                if x-i == figures_list_p1[i][1] and y-i == figures_list_p1[i][2]:
+                    if figures_list_p1[i][0] == "k":
+                        print("SCHACH")
+
+                    valid_moves_list_p2.append([x-i, y-i])
+                    break 
+
+def rook(x, y, player):
+    if player == "P1":
+        # X-direction
+        for i in range(len(gamefield)-x):
+            if gamefield[x+i][y] == "":
+                valid_moves_list_p1.append([x+i, y])
+                break
+            elif x+i == figures_list_p2[i][1] and y == figures_list_p2[i][2]:
+                valid_moves_list_p1.append([x+i, y])
+
+                if figures_list_p2[i][0] == "k":
+                    print("SCHACH")
+                break
+            elif x+i == figures_list_p1[i][1] and y == figures_list_p1[i][2]:
+                continue
+
+        for i in range(x):
+            if gamefield[x-i][y] == "":
+                valid_moves_list_p1.append([x-i, y])
+                break
+            elif x-i == figures_list_p2[i][1] and y == figures_list_p2[i][2]:
+                valid_moves_list_p1.append([x-i, y])
+
+                if figures_list_p2[i][0] == "k":
+                    print("SCHACH")
+                break
+            elif x-i == figures_list_p1[i][1] and y == figures_list_p1[i][2]:
+                continue
+        
+        # Y-direction
+        for i in range(len(gamefield)-y):
+            if gamefield[x][y+i] == "":
+                valid_moves_list_p1.append([x, y+i])
+                break
+            elif x == figures_list_p2[i][1] and y+i == figures_list_p2[i][2]:
+                valid_moves_list_p1.append([x, y+i])
+
+                if figures_list_p2[i][0] == "k":
+                    print("SCHACH")
+                break
+            elif x == figures_list_p1[i][1] and y+i == figures_list_p1[i][2]:
+                continue
+
+        for i in range(y):
+            if gamefield[x][y-i] == "":
+                valid_moves_list_p1.append([x, y-i])
+                break
+            elif x == figures_list_p2[i][1] and y-i == figures_list_p2[i][2]:
+                valid_moves_list_p1.append([x, y-i])
+
+                if figures_list_p2[i][0] == "k":
+                    print("SCHACH")
+                break
+            elif x == figures_list_p1[i][1] and y-i == figures_list_p1[i][2]:
+                continue
+
+    elif player == "P2":
+        # X-direction
+        for i in range(len(gamefield)-x):
+            if gamefield[x+i][y] == "":
+                valid_moves_list_p2.append([x+i, y])
+                break
+            elif x+i == figures_list_p1[i][1] and y == figures_list_p1[i][2]:
+                valid_moves_list_p2.append([x+i, y])
+
+                if figures_list_p1[i][0] == "K":
+                    print("SCHACH")
+                break
+            elif x+i == figures_list_p2[i][1] and y == figures_list_p2[i][2]:
+                continue
+
+        for i in range(x):
+            if gamefield[x-i][y] == "":
+                valid_moves_list_p2.append([x-i, y])
+                break
+            elif x-i == figures_list_p1[i][1] and y == figures_list_p1[i][2]:
+                valid_moves_list_p2.append([x-i, y])
+
+                if figures_list_p1[i][0] == "K":
+                    print("SCHACH")
+                break
+            elif x-i == figures_list_p2[i][1] and y == figures_list_p2[i][2]:
+                continue
+        
+        # Y-direction
+        for i in range(len(gamefield)-y):
+            if gamefield[x][y+i] == "":
+                valid_moves_list_p2.append([x, y+i])
+                break
+            elif x == figures_list_p1[i][1] and y+i == figures_list_p1[i][2]:
+                valid_moves_list_p2.append([x, y+i])
+
+                if figures_list_p1[i][0] == "K":
+                    print("SCHACH")
+                break
+            elif x == figures_list_p2[i][1] and y+i == figures_list_p2[i][2]:
+                continue
+
+        for i in range(y):
+            if gamefield[x][y-i] == "":
+                valid_moves_list_p2.append([x, y-i])
+                break
+            elif x == figures_list_p1[i][1] and y-i == figures_list_p1[i][2]:
+                valid_moves_list_p2.append([x, y-i])
+
+                if figures_list_p1[i][0] == "K":
+                    print("SCHACH")
+                break
+            elif x == figures_list_p2[i][1] and y-i == figures_list_p2[i][2]:
+                continue
+
+def knight(x, y, player):
+    if player == "P1":
+        # X-direction
+        if gamefield[x+2][y+1] == "":
+            pass
+        
+        if gamefield[x+2][y-1] == "":
+            pass
+
+        if gamefield[x-2][y+1] == "":
+            pass
+
+        if gamefield[x+2][y-1] == "":
+            pass
+
+        # Y-direction
+        if gamefield[x+1][y+2] == "":
+            pass
+
+        if gamefield[x-1][y+2] == "":
+            pass
+
+        if gamefield[x+1][y-2] == "":
+            pass
+
+        if gamefield[x-1][y-2] == "":
+            pass
+    elif player == "P2":
+        pass   
 
 run = True
 mode = "pp" # pp = Player vs Player | pc = Player vs Computer | cc = Computer vs Computer
